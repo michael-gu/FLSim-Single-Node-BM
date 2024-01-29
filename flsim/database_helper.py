@@ -8,7 +8,7 @@ def insert_model(db_path, table, model_state_dict, client_id, global_epoch_num, 
     if not os.path.exists(dir_path):
         # Create the directory
         os.makedirs(dir_path)
-        
+
     connection = sqlite3.connect(db_path);
     cursor = connection.cursor()
 
@@ -140,6 +140,11 @@ def get_benchmark_stats(db_path, table, csv_path):
 
     connection.commit()
     connection.close()
+
+    # Check if the directory exists and create it if it doesn't
+    dir_path = os.path.dirname(csv_path)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
 
     # Write the stats to a CSV file
     with open(csv_path, 'w', newline='') as csvfile:
