@@ -1,5 +1,5 @@
 import sys
-from examples.database_helper import get_completed_model
+from flsim.database_helper import get_completed_model
 sys.path.insert(0, '../flsim')
 
 from flsim.utils.example_utils import FLModel, SimpleConvNet

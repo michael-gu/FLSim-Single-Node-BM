@@ -1,6 +1,5 @@
 import os
 import sys
-sys.path.insert(0, 'examples')
 
 command = "python3 cifar10_example.py --config-file configs/cifar10_config.json"
 

@@ -19,7 +19,7 @@ from datetime import datetime
 import sys
 sys.path.insert(0, '../flsim')
 import json
-from examples.database_helper import insert_benchmark_stats, insert_completed_model, get_db_size
+from flsim.database_helper import insert_benchmark_stats, insert_completed_model, get_db_size
 
 import flsim.configs  # noqa
 import hydra

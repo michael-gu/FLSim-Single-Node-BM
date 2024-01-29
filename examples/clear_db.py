@@ -1,4 +1,4 @@
-import database_helper
+import flsim.database_helper as database_helper
 
 database_helper.clear_model_db('model_databases/flsim_single_node_models.db')
 

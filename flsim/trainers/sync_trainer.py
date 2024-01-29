@@ -16,7 +16,7 @@ from time import time
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import torch
-from examples.database_helper import delete_table, insert_model
+from flsim.database_helper import delete_table, insert_model
 from flsim.channels.message import Message
 from flsim.clients.base_client import Client
 from flsim.clients.dp_client import DPClient, DPClientConfig
