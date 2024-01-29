@@ -1,3 +1,4 @@
+import csv
 import pickle
 import sqlite3
 import os
@@ -63,6 +64,12 @@ def get_db_size(db_path):
     return size
 
 def delete_table(db_path, table):
+    # Check if the directory exists
+    dir_path = os.path.dirname(db_path)
+    if not os.path.exists(dir_path):
+        # Create the directory
+        os.makedirs(dir_path)
+
     connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
 
@@ -111,3 +118,21 @@ def insert_benchmark_stats(db_path, table, global_num_epoch, client_num_epoch, n
 
     connection.commit()
     connection.close()
+
+def get_benchmark_stats(db_path, table, csv_path):
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
+
+    cursor.execute('''
+        SELECT * FROM "{}"
+    '''.format(table))
+    stats = cursor.fetchall()
+
+    connection.commit()
+    connection.close()
+
+    # Write the stats to a CSV file
+    with open(csv_path, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(stats)
+
