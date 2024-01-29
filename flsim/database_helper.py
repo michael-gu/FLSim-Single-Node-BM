@@ -4,6 +4,11 @@ import sqlite3
 import os
 
 def insert_model(db_path, table, model_state_dict, client_id, global_epoch_num, global_round_num):
+    dir_path = os.path.dirname(db_path)
+    if not os.path.exists(dir_path):
+        # Create the directory
+        os.makedirs(dir_path)
+        
     connection = sqlite3.connect(db_path);
     cursor = connection.cursor()
 
@@ -94,6 +99,11 @@ def clear_model_db(db_path):
     connection.close()
 
 def insert_benchmark_stats(db_path, table, global_num_epoch, client_num_epoch, num_users, users_per_round, tracking_data_provenance, training_time, model_storage_size):
+    dir_path = os.path.dirname(db_path)
+    if not os.path.exists(dir_path):
+        # Create the directory
+        os.makedirs(dir_path)
+    
     connection = sqlite3.connect(db_path);
     cursor = connection.cursor()
 
