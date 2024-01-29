@@ -80,7 +80,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0}" if cuda_enabled else "cpu")
     model = SimpleConvNet(in_channels=3, num_classes=10)
-    store_intermediate_models = False
+    store_intermediate_models = True
 
     # creates global model for federated learning passing in model and device
     global_model = FLModel(model, device)
