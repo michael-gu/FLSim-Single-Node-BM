@@ -14,9 +14,12 @@ import random
 from dataclasses import dataclass
 from time import time
 from typing import Any, Dict, Iterable, List, Optional, Tuple
+from flsim import mysql_database_helper
+from flsim import database_helper
 
 import torch
 from flsim.database_helper import delete_table, insert_model
+from flsim.mysql_database_helper import delete_table, insert_model
 from flsim.channels.message import Message
 from flsim.clients.base_client import Client
 from flsim.clients.dp_client import DPClient, DPClientConfig
@@ -186,8 +189,8 @@ class SyncTrainer(FLTrainer):
             all users in a given epoch.
         """
         # Set up synchronization utilities for distributed training
-        delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
-
+        # database_helper.delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
+        mysql_database_helper.delete_table('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'cifar10_models')
         FLDistributedUtils.setup_distributed_training(
             distributed_world_size, use_cuda=self.cuda_enabled
         )  # TODO do not call distributed utils here, this is upstream responsibility
@@ -281,9 +284,8 @@ class SyncTrainer(FLTrainer):
                     for client in clients:
                         model = client.last_updated_model
                         if model is not None:
-                            insert_model('model_databases/flsim_single_node_models.db', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
-                            # print("Inserted global model into db, id: " + client._name + " round: " + str(round) + ", epoch: " + str(epoch))
-
+                            # database_helper.insert_model('model_databases/flsim_single_node_models.db', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
+                            mysql_database_helper.insert_model('localhost', 'michgu', 'Dolphin#1','cifar10_benchmarks', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
                 if self.logger.isEnabledFor(logging.DEBUG):
                     norm = FLModelParamUtils.debug_model_norm(
                         self.global_model().fl_get_module()

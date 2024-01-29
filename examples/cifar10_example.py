@@ -19,7 +19,8 @@ from datetime import datetime
 import sys
 sys.path.insert(0, '../flsim')
 import json
-from flsim.database_helper import insert_benchmark_stats, insert_completed_model, get_db_size
+from flsim.database_helper import insert_benchmark_stats
+from flsim.mysql_database_helper import insert_benchmark_stats
 
 import flsim.configs  # noqa
 import hydra
@@ -150,10 +151,11 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
 
     # save stats to benchmarkdb
     if store_intermediate_models:
-        insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('model_databases/flsim_single_node_models.db'))
+        # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('model_databases/flsim_single_node_models.db'))
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('model_databases/flsim_single_node_models.db'))
     else:
-        insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
-
+        # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
 # entry point to script when run from console
 @hydra.main(config_path=None, config_name="cifar10_tutorial")
 def run(cfg: DictConfig) -> None:
