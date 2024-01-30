@@ -18,6 +18,7 @@ With this tutorial, you will learn the following key components of FLSim:
 from datetime import datetime
 import sys
 
+sys.path.insert(0, '../examples')
 from examples.celeba_example import Resnet18
 sys.path.insert(0, '../flsim')
 import json
