@@ -3,10 +3,10 @@ from flsim.mysql_database_helper import get_benchmark_stats
 
 # Connect to the database
 conn = mysql.connector.connect(
-    host='your_host',
-    user='your_username',
-    password='your_password',
-    database='your_database'
+    host='localhost',
+    user='michgu',
+    password='Dolphin#1',
+    database='cifar10_benchmarks'
 )
 
 # Create a cursor object
