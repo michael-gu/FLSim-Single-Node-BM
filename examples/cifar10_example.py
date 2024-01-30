@@ -17,6 +17,8 @@ With this tutorial, you will learn the following key components of FLSim:
 """
 from datetime import datetime
 import sys
+
+from examples.celeba_example import Resnet18
 sys.path.insert(0, '../flsim')
 import json
 from flsim.database_helper import insert_benchmark_stats, get_db_size
@@ -80,8 +82,9 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
 def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> None:
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
-    # model = Resnet10(in_channels=3, num_classes=10)
-    model = SimpleConvNet(in_channels=3, num_classes=10)
+    model = Resnet18(in_channels=3, num_classes=10)
+    
+    # model = SimpleConvNet(in_channels=3, num_classes=10)
     store_intermediate_models = False
 
     # creates global model for federated learning passing in model and device
