@@ -18,7 +18,9 @@ else:
     sys.exit(1)
 
 try:
+    print("running " + str(args.range_value) + " iterations of script")
     for _ in range(args.range_value):
+        print("beginning iteration #" + str(args.range_value))
         if os.system(command) != 0:
             print("Command failed, exiting.")
             sys.exit(1)
