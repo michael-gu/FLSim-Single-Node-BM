@@ -76,7 +76,7 @@ def get_completed_model(db_host, db_user, db_password, db_name, table, timestamp
 
     return pickle.loads(model_blob)
 
-def get_db_size(db_host, db_user, db_password, db_name):
+def get_table_size(db_host, db_user, db_password, db_name, table_name):
     connection = mysql.connector.connect(
         host=db_host,
         user=db_user,
@@ -86,12 +86,11 @@ def get_db_size(db_host, db_user, db_password, db_name):
     cursor = connection.cursor()
 
     cursor.execute('''
-        SELECT table_schema AS "Database", 
-               ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS "Size (MB)" 
-        FROM information_schema.tables 
-        WHERE table_schema = %s
-        GROUP BY table_schema;
-    ''', (db_name,))
+        SELECT table_name AS `Table`, 
+               ROUND((data_length + index_length) / 1024 / 1024, 2) AS `Size (MB)` 
+        FROM information_schema.TABLES 
+        WHERE table_schema = %s AND table_name = %s;
+    ''', (db_name, table_name,))
     size = cursor.fetchone()[1]
     
     connection.commit()

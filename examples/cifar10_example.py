@@ -23,8 +23,7 @@ sys.path.insert(0, '../examples')
 from celeba_example import Resnet18
 sys.path.insert(0, '../flsim')
 import json
-from flsim.database_helper import insert_benchmark_stats, get_db_size
-from flsim.mysql_database_helper import insert_benchmark_stats, get_db_size
+from flsim.mysql_database_helper import get_table_size
 
 import flsim.configs  # noqa
 import hydra
@@ -84,8 +83,8 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
 def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> None:
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
-    # model = Resnet18(num_classes=10)
-    model = SimpleConvNet(in_channels=3, num_classes=10)
+    model = Resnet18(num_classes=10)
+    # model = SimpleConvNet(in_channels=3, num_classes=10)
 
 
     # Create the parser
@@ -173,7 +172,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     # save stats to benchmarkdb
     if store_intermediate_models:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, flsim.database_helper.get_db_size('model_databases/flsim_single_node_models.db'))
-        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('localhost', 'michgu', 'Dolphin#1', 'flsim_single_node_models'))
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_table_size('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks'))
     else:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
         flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
