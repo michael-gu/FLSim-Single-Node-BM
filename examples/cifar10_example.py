@@ -86,6 +86,9 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     model = Resnet18(num_classes=10)
     
     # model = SimpleConvNet(in_channels=3, num_classes=10)
+    
+    with open('configs/cifar10_config.json', 'r') as f:
+        data = json.load(f)
     keep_intermediate = data['config']['trainer']['always_keep_trained_model']
     if keep_intermediate == 'true':
         store_intermediate_models = True
@@ -152,8 +155,6 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     # if store_intermediate_models:
     #     print("SQLite Database Size: " +str(get_db_size('model_databases/flsim_single_node_models.db')) + " bytes")
     
-    with open('configs/cifar10_config.json', 'r') as f:
-        data = json.load(f)
     global_num_epochs = data['config']['trainer']['epochs']
     client_num_epochs = data['config']['trainer']['client']['epochs']
     users_per_round = data['config']['trainer']['users_per_round']
