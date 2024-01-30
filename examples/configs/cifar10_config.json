@@ -15,7 +15,7 @@
         }
       },
       "client": {
-        "epochs": 5,
+        "epochs": 1,
         "optimizer": {
           "_base_": "base_optimizer_sgd",
           "lr": 0.0138,
@@ -32,7 +32,7 @@
     },
     "data": {
       "local_batch_size": 32,
-      "examples_per_user": 500
+      "examples_per_user": 250
     }
   }
 }
