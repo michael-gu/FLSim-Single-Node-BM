@@ -14,8 +14,8 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS `{}` (
-            model BLOB,
-            client_id INTEGER,
+            model LONGBLOB,
+            client_id TEXT,
             global_epoch_num INTEGER,
             global_round_num INTEGER
         )       
