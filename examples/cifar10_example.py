@@ -16,6 +16,7 @@ With this tutorial, you will learn the following key components of FLSim:
     python3 cifar10_example.py --config-file configs/cifar10_config.json
 """
 from datetime import datetime
+import argparse
 import sys
 
 sys.path.insert(0, '../examples')
@@ -86,8 +87,17 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     model = Resnet18(num_classes=10)
     
     # model = SimpleConvNet(in_channels=3, num_classes=10)
-    
-    with open('configs/cifar10_config.json', 'r') as f:
+    # Create the parser
+    parser = argparse.ArgumentParser()
+
+    # Add an argument for the config file
+    parser.add_argument('--config-file', type=str, required=True)
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+
+    with open(args.config_file, 'r') as f:
         data = json.load(f)
     keep_intermediate = data['config']['trainer']['always_keep_trained_model']
     if keep_intermediate == 'true':
