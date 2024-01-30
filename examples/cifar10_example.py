@@ -101,7 +101,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     with open(args.config_file, 'r') as f:
         data = json.load(f)
     keep_intermediate = data['config']['trainer']['always_keep_trained_model']
-    if keep_intermediate == 'true':
+    if keep_intermediate:
         store_intermediate_models = True
     else:
         store_intermediate_models = False
