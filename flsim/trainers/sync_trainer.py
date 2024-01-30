@@ -190,6 +190,7 @@ class SyncTrainer(FLTrainer):
         """
         # Set up synchronization utilities for distributed training
         # database_helper.delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
+        print("Clearing model database")
         mysql_database_helper.delete_table('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'cifar10_models')
        
         FLDistributedUtils.setup_distributed_training(

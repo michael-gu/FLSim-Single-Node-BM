@@ -22,6 +22,8 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
     '''.format(table))
     connection.commit()
 
+    print("Inserting model into database")
+
     model_blob = pickle.dumps(model_state_dict)
     cursor.execute('''
         INSERT INTO `{}`(model, client_id, global_epoch_num, global_round_num)
