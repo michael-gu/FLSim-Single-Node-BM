@@ -86,7 +86,11 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     model = Resnet18(num_classes=10)
     
     # model = SimpleConvNet(in_channels=3, num_classes=10)
-    store_intermediate_models = True
+    keep_intermediate = data['config']['trainer']['always_keep_trained_model']
+    if keep_intermediate == 'true':
+        store_intermediate_models = True
+    else:
+        store_intermediate_models = False
 
     # creates global model for federated learning passing in model and device
     global_model = FLModel(model, device)
@@ -157,7 +161,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     # save stats to benchmarkdb
     if store_intermediate_models:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, flsim.database_helper.get_db_size('model_databases/flsim_single_node_models.db'))
-        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('model_databases/flsim_single_node_models.db'))
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_db_size('localhost', 'michgu', 'Dolphin#1', 'flsim_single_node_models'))
     else:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
         flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)

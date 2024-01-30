@@ -1,7 +1,7 @@
 import os
 import sys
 
-command = "python3 cifar10_example.py --config-file configs/cifar10_config.json"
+command = "python3 cifar10_example.py --config-file configs/cifar10_config_with_feature.json"
 
 # make sure to set up config file and cifar10 file accordingly
 
