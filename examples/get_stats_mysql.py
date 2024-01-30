@@ -22,7 +22,7 @@ result = cursor.fetchone()
 if result:
     print("benchmarks_yes_tracking exists")
     csv_path = "../benchmark_stats/single-node-with-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'your_database', 'benchmarks_yes_tracking', csv_path)
+    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', csv_path)
 else:
     print("benchmarks_yes_tracking does not exist")
 
@@ -37,7 +37,7 @@ result = cursor.fetchone()
 if result:
     print("benchmarks_no_tracking exists")
     csv_path = "../benchmark_stats/single-node-without-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'your_database', 'benchmarks_no_tracking', csv_path)
+    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', csv_path)
 else:
     print("benchmarks_no_tracking does not exist")
 
