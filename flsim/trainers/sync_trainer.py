@@ -189,8 +189,9 @@ class SyncTrainer(FLTrainer):
             all users in a given epoch.
         """
         # Set up synchronization utilities for distributed training
-        database_helper.delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
-        # mysql_database_helper.delete_table('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'cifar10_models')
+        # database_helper.delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
+        mysql_database_helper.delete_table('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'cifar10_models')
+       
         FLDistributedUtils.setup_distributed_training(
             distributed_world_size, use_cuda=self.cuda_enabled
         )  # TODO do not call distributed utils here, this is upstream responsibility
@@ -284,8 +285,8 @@ class SyncTrainer(FLTrainer):
                     for client in clients:
                         model = client.last_updated_model
                         if model is not None:
-                            database_helper.insert_model('model_databases/flsim_single_node_models.db', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
-                            # mysql_database_helper.insert_model('localhost', 'michgu', 'Dolphin#1','cifar10_benchmarks', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
+                            # database_helper.insert_model('model_databases/flsim_single_node_models.db', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
+                            mysql_database_helper.insert_model('localhost', 'michgu', 'Dolphin#1','cifar10_benchmarks', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
                 if self.logger.isEnabledFor(logging.DEBUG):
                     norm = FLModelParamUtils.debug_model_norm(
                         self.global_model().fl_get_module()
