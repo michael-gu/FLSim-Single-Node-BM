@@ -169,6 +169,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     client_num_epochs = data['config']['trainer']['client']['epochs']
     users_per_round = data['config']['trainer']['users_per_round']
 
+    print("inserting benchmarks")
     # save stats to benchmarkdb
     if store_intermediate_models:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, flsim.database_helper.get_db_size('model_databases/flsim_single_node_models.db'))
