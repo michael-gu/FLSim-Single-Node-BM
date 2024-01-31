@@ -13,7 +13,6 @@ if args.mode == "true":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_with_feature.json"
     try:
         for _ in range(args.range_value):
-            print("beginning iteration #" + str(_))
             if os.system(command) != 0:
                 print("Command failed, exiting.")
                 sys.exit(1)
@@ -24,7 +23,6 @@ elif args.mode == "false":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_without_feature.json"
     try:
         for _ in range(args.range_value):
-            print("beginning iteration #" + str(_))
             if os.system(command) != 0:
                 print("Command failed, exiting.")
                 sys.exit(1)
