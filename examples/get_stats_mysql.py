@@ -1,4 +1,3 @@
-import datetime
 import mysql.connector
 from flsim.mysql_database_helper import get_benchmark_stats
 
@@ -18,9 +17,6 @@ cursor.execute("SHOW TABLES LIKE 'benchmarks_yes_tracking'")
 
 # Fetch the result
 result = cursor.fetchone()
-
-currTime = datetime.now()
-formatted_time = currTime.strftime("%m-%d-%Y_%H-%M-%S")
 
 # Check if the table exists
 if result:
