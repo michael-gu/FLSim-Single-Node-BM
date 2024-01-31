@@ -21,7 +21,7 @@ import sys
 
 sys.path.insert(0, '../examples')
 from celeba_example import Resnet18
-sys.path.insert(0, '/mydata/FLSim/flsim')
+sys.path.insert(0, '../flsim')
 import json
 from flsim.mysql_database_helper import get_table_size
 
