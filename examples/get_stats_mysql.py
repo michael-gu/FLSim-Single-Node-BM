@@ -25,7 +25,7 @@ formatted_time = currTime.strftime("%m-%d-%Y_%H-%M-%S")
 # Check if the table exists
 if result:
     print("benchmarks_yes_tracking exists")
-    csv_path = "../benchmark_stats/single-node-with-feature_" + formatted_time + ".csv"
+    csv_path = "../benchmark_stats/single-node-with-feature.csv"
     get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', csv_path)
 else:
     print("benchmarks_yes_tracking does not exist")
@@ -40,7 +40,7 @@ result = cursor.fetchone()
 # Check if the table exists
 if result:
     print("benchmarks_no_tracking exists")
-    csv_path = "../benchmark_stats/single-node-without-feature_" + formatted_time + ".csv"
+    csv_path = "../benchmark_stats/single-node-without-feature.csv"
     get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', csv_path)
 else:
     print("benchmarks_no_tracking does not exist")

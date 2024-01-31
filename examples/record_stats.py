@@ -12,7 +12,6 @@ args = parser.parse_args()
 if args.mode == "true":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_with_feature.json"
     try:
-        print("running " + str(args.range_value) + " iterations of script")
         for _ in range(args.range_value):
             print("beginning iteration #" + str(_))
             if os.system(command) != 0:
@@ -24,7 +23,6 @@ if args.mode == "true":
 elif args.mode == "false":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_without_feature.json"
     try:
-        print("running " + str(args.range_value) + " iterations of script")
         for _ in range(args.range_value):
             print("beginning iteration #" + str(_))
             if os.system(command) != 0:
