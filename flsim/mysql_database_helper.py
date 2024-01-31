@@ -22,11 +22,11 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
     '''.format(table))
     connection.commit()
 
-    model_blob = pickle.dumps(model_state_dict)
+    model = pickle.dumps(model_state_dict)
     cursor.execute('''
         INSERT INTO `{}`(model, client_id, global_epoch_num, global_round_num)
         VALUES(%s, %s, %s, %s)
-    '''.format(table), (model_blob, client_id, global_epoch_num, global_round_num))
+    '''.format(table), (model, client_id, global_epoch_num, global_round_num))
     connection.commit()
     connection.close()
 

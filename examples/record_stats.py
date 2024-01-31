@@ -11,19 +11,28 @@ args = parser.parse_args()
 # Set the command based on the mode argument
 if args.mode == "true":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_with_feature.json"
+    try:
+        print("running " + str(args.range_value) + " iterations of script")
+        for _ in range(args.range_value):
+            print("beginning iteration #" + str(args.range_value))
+            if os.system(command) != 0:
+                print("Command failed, exiting.")
+                sys.exit(1)
+    except KeyboardInterrupt:
+        print("Interrupted by user, exiting.")
+        sys.exit(1)
 elif args.mode == "false":
     command = "python3 cifar10_example.py --config-file configs/cifar10_config_without_feature.json"
+    try:
+        print("running " + str(args.range_value) + " iterations of script")
+        for _ in range(args.range_value):
+            print("beginning iteration #" + str(args.range_value))
+            if os.system(command) != 0:
+                print("Command failed, exiting.")
+                sys.exit(1)
+    except KeyboardInterrupt:
+        print("Interrupted by user, exiting.")
+        sys.exit(1)
 else:
     print(f"Invalid mode: {args.mode}")
-    sys.exit(1)
-
-try:
-    print("running " + str(args.range_value) + " iterations of script")
-    for _ in range(args.range_value):
-        print("beginning iteration #" + str(args.range_value))
-        if os.system(command) != 0:
-            print("Command failed, exiting.")
-            sys.exit(1)
-except KeyboardInterrupt:
-    print("Interrupted by user, exiting.")
     sys.exit(1)
