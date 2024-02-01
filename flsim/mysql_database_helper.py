@@ -21,12 +21,24 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
         )       
     '''.format(table))
     connection.commit()
+    
+    cursor.execute('SELECT COUNT(*) FROM `{}`'.format(table))
+    row_count = cursor.fetchone()[0]
 
     model = pickle.dumps(model_state_dict)
-    cursor.execute('''
-        INSERT INTO `{}`(model, client_id, global_epoch_num, global_round_num)
-        VALUES(%s, %s, %s, %s)
-    '''.format(table), (model, client_id, global_epoch_num, global_round_num))
+
+    if row_count == 0:
+        cursor.execute('''
+            INSERT INTO `{}`(model, client_id, global_epoch_num, global_round_num)
+            VALUES(%s, %s, %s, %s)
+        '''.format(table), (model, client_id, global_epoch_num, global_round_num))
+    else:
+        cursor.execute('''
+            UPDATE `{}` 
+            SET model = %s, global_epoch_num = %s, global_round_num = %s
+            WHERE client_id = %s
+        '''.format(table), (model, global_epoch_num, global_round_num, client_id))
+        
     connection.commit()
     connection.close()
 
