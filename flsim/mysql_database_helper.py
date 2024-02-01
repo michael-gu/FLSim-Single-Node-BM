@@ -14,6 +14,7 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS `{}` (
+            itr_id INT AUTO_INCREMENT PRIMARY KEY,
             model LONGBLOB,
             client_id TEXT,
             global_epoch_num INTEGER,
@@ -36,7 +37,7 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
         cursor.execute('''
             UPDATE `{}` 
             SET model = %s, global_epoch_num = %s, global_round_num = %s
-            WHERE client_id = %s
+            WHERE itr_id = %s
         '''.format(table), (model, global_epoch_num, global_round_num, client_id))
         
     connection.commit()
