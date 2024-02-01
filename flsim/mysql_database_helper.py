@@ -36,9 +36,9 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
     else:
         cursor.execute('''
             UPDATE `{}` 
-            SET model = %s, client_id, global_epoch_num = %s, global_round_num = %s
+            SET model = %s, client_id = %s, global_epoch_num = %s, global_round_num = %s
             WHERE itr_id = %s
-        '''.format(table), (model, client_id, global_epoch_num, global_round_num, client_id))
+        '''.format(table), (model, client_id, global_epoch_num, global_round_num, 1))
         
     connection.commit()
     connection.close()
