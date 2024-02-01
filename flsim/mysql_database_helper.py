@@ -16,7 +16,7 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
         CREATE TABLE IF NOT EXISTS `{}` (
             itr_id INT AUTO_INCREMENT PRIMARY KEY,
             model LONGBLOB,
-            client_id TEXT,
+            client_id INTEGER,
             global_epoch_num INTEGER,
             global_round_num INTEGER
         )       
