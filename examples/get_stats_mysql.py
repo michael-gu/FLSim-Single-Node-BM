@@ -12,34 +12,20 @@ conn = mysql.connector.connect(
 # Create a cursor object
 cursor = conn.cursor()
 
-# Execute the query to check if the table exists
-cursor.execute("SHOW TABLES LIKE 'yes_tracking'")
+# Execute the query to get all table names
+cursor.execute("SHOW TABLES")
 
-# Fetch the result
-result = cursor.fetchone()
+# Fetch all the results
+tables = cursor.fetchall()
 
-# Check if the table exists
-if result:
-    print("benchmarks_yes_tracking exists")
-    csv_path = "../benchmark_stats/single-node-with-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'yes_tracking', csv_path)
-else:
-    print("benchmarks_yes_tracking does not exist")
-
-
-# Execute the query to check if the table exists
-cursor.execute("SHOW TABLES LIKE 'no_tracking'")
-
-# Fetch the result
-result = cursor.fetchone()
-
-# Check if the table exists
-if result:
-    print("benchmarks_no_tracking exists")
-    csv_path = "../benchmark_stats/single-node-without-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'no_tracking', csv_path)
-else:
-    print("benchmarks_no_tracking does not exist")
+# For each table
+for table in tables:
+    table_name = table[0]
+    print(f"{table_name} exists")
+    csv_path = f"../benchmark_stats/{table_name}.csv"
+    
+    # Call get_benchmark_stats for each table
+    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', table_name, csv_path)
 
 # Close the connection
 conn.close()

@@ -22,13 +22,13 @@
           "momentum": 0
         }
       },
-      "users_per_round": 10,
+      "users_per_round": 20,
       "epochs": 1,
       "train_metrics_reported_per_epoch": 10,
-      "always_keep_trained_model": false,
+      "always_keep_trained_model": true,
       "eval_epoch_frequency": 1,
-      "do_eval": true,
-      "report_train_metrics_after_aggregation": true
+      "do_eval": false,
+      "report_train_metrics_after_aggregation": false
     },
     "data": {
       "local_batch_size": 32,
