@@ -2,6 +2,7 @@
   "config": {
     "trainer": {
       "_base_": "base_sync_trainer",
+      "epochs": 10,
       "server": {
         "_base_": "base_sync_server",
         "server_optimizer": {
@@ -22,20 +23,19 @@
           "momentum": 0
         }
       },
-      "users_per_round": 100,
-      "epochs": 30,
+      "users_per_round": 20,
       "train_metrics_reported_per_epoch": 100,
-      "always_keep_trained_model": false,
+      "always_keep_trained_model": true,
       "eval_epoch_frequency": 0.2,
-      "do_eval": true,
-      "report_train_metrics_after_aggregation": true
+      "do_eval": false,
+      "report_train_metrics_after_aggregation": false
     },
     "data": {
       "local_batch_size": 32,
       "drop_last": false
     },
     "model": {
-      "use_resnet": false,
+      "use_resnet": true,
       "dropout": 0.1,
       "target_eval": 90,
       "window_size": 1,

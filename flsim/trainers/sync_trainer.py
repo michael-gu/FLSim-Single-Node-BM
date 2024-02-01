@@ -287,7 +287,7 @@ class SyncTrainer(FLTrainer):
                         model = client.last_updated_model
                         if model is not None:
                             # database_helper.insert_model('model_databases/flsim_single_node_models.db', 'cifar10_models', model.fl_get_module().state_dict(), client._name, epoch, round)
-                            mysql_database_helper.insert_model('localhost', 'michgu', 'Dolphin#1','cifar10_benchmarks', 'cifar10_models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                            mysql_database_helper.insert_model('localhost', 'michgu', 'Dolphin#1','cifar10_benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                 if self.logger.isEnabledFor(logging.DEBUG):
                     norm = FLModelParamUtils.debug_model_norm(
                         self.global_model().fl_get_module()

@@ -21,12 +21,15 @@ Before running this file, you need to download the dataset and partition the dat
 Typical usage example:
     python3 celeba_example.py --config-file configs/celeba_config.json
 """
+import argparse
+import datetime
 import json
 import os
 import random
 from typing import Any, Iterator, List, Tuple
 
-import flsim.configs  # noqa
+import flsim.configs
+from flsim.mysql_database_helper import get_table_size  # noqa
 import hydra  # @manual
 import torch
 import torch.nn as nn
@@ -215,14 +218,33 @@ def main_worker(
         )
     )
 
+
+    # Create the parser
+    parser = argparse.ArgumentParser()
+
+    # Add an argument for the config file
+    parser.add_argument('--config-file', type=str, required=True)
+
+    # Parse the arguments
+    args = parser.parse_args()
+    with open(args.config_file, 'r') as f:
+        data = json.load(f)
+    keep_intermediate = data['config']['trainer']['always_keep_trained_model']
+    if keep_intermediate:
+        store_intermediate_models = True
+    else:
+        store_intermediate_models = False
+
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0}" if cuda_enabled else "cpu")
     # pyre-fixme[6]: Expected `Optional[str]` for 2nd param but got `device`.
     global_model = FLModel(model, device)
     if cuda_enabled:
         global_model.fl_cuda()
-
+    print("Tracking data provenance: " + str(store_intermediate_models))
     trainer = instantiate(trainer_config, model=global_model, cuda_enabled=cuda_enabled)
+
+    startTime = datetime.now()
 
     final_model, eval_score = trainer.train(
         data_provider=data_provider,
@@ -235,11 +257,28 @@ def main_worker(
         num_total_users=data_provider.num_train_users(),
         distributed_world_size=distributed_world_size,
     )
+    
+    endTime = datetime.now()
+
+    totalTime = (endTime - startTime).total_seconds()
+    
     trainer.test(
         data_provider=data_provider,
         metrics_reporter=MetricsReporter([Channel.STDOUT]),
     )
+    
+    global_num_epochs = data['config']['trainer']['epochs']
+    client_num_epochs = data['config']['trainer']['client']['epochs']
+    users_per_round = data['config']['trainer']['users_per_round']
 
+    print("inserting benchmarks")
+    # save stats to benchmarkdb
+    if store_intermediate_models:
+        # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, flsim.database_helper.get_db_size('model_databases/flsim_single_node_models.db'))
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_table_size('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'models'))
+    else:
+        # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
 
 @hydra.main(config_path=None, config_name="celeba_config")
 def run(cfg: DictConfig) -> None:
