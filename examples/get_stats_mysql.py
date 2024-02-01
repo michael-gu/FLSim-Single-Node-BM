@@ -6,14 +6,14 @@ conn = mysql.connector.connect(
     host='localhost',
     user='michgu',
     password='Dolphin#1',
-    database='cifar10_benchmarks'
+    database='benchmarks'
 )
 
 # Create a cursor object
 cursor = conn.cursor()
 
 # Execute the query to check if the table exists
-cursor.execute("SHOW TABLES LIKE 'benchmarks_yes_tracking'")
+cursor.execute("SHOW TABLES LIKE 'yes_tracking'")
 
 # Fetch the result
 result = cursor.fetchone()
@@ -22,13 +22,13 @@ result = cursor.fetchone()
 if result:
     print("benchmarks_yes_tracking exists")
     csv_path = "../benchmark_stats/single-node-with-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_yes_tracking', csv_path)
+    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'yes_tracking', csv_path)
 else:
     print("benchmarks_yes_tracking does not exist")
 
 
 # Execute the query to check if the table exists
-cursor.execute("SHOW TABLES LIKE 'benchmarks_no_tracking'")
+cursor.execute("SHOW TABLES LIKE 'no_tracking'")
 
 # Fetch the result
 result = cursor.fetchone()
@@ -37,7 +37,7 @@ result = cursor.fetchone()
 if result:
     print("benchmarks_no_tracking exists")
     csv_path = "../benchmark_stats/single-node-without-feature.csv"
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'cifar10_benchmarks', 'benchmarks_no_tracking', csv_path)
+    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'no_tracking', csv_path)
 else:
     print("benchmarks_no_tracking does not exist")
 
