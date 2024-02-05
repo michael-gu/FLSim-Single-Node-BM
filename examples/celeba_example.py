@@ -245,16 +245,17 @@ def main_worker(
     print("Tracking data provenance: " + str(store_intermediate_models))
     trainer = instantiate(trainer_config, model=global_model, cuda_enabled=cuda_enabled)
 
-    startTime = datetime.now()
-
-    final_model, eval_score = trainer.train(
-        data_provider=data_provider,
-        metrics_reporter=MetricsReporter(
+    metrics_reporter = MetricsReporter(
             [Channel.TENSORBOARD, Channel.STDOUT],
             target_eval=model_config.target_eval,
             window_size=model_config.window_size,
             average_type=model_config.average_type,
-        ),
+        )
+    startTime = datetime.now()
+
+    final_model, eval_score = trainer.train(
+        data_provider=data_provider,
+        metrics_reporter=metrics_reporter,
         num_total_users=data_provider.num_train_users(),
         distributed_world_size=distributed_world_size,
         store_intermediate_models=store_intermediate_models,
