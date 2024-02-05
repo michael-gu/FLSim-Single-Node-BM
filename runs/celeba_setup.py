@@ -37,6 +37,7 @@ try:
     if os.system("unzip image_align_celeba.zip") != 0:
         print("unzip")
         sys.exit(1)
+    os.chdir('../..')
     if os.system("./preprocess.sh --sf 1.0 -k 0 -iu 1 -s niid -t 'user' --tf 0.90 --spltseed 1") != 0:
         
         sys.exit(1)
