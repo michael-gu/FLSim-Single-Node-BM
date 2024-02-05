@@ -2,7 +2,7 @@
   "config": {
     "trainer": {
       "_base_": "base_sync_trainer",
-      "epochs": 1,
+      "epochs": 10,
       "server": {
         "_base_": "base_sync_server",
         "server_optimizer": {

@@ -282,11 +282,12 @@ class SyncTrainer(FLTrainer):
                 )
 
                 if store_intermediate_models:
+                    for _ in range(5):
                     # INSERT ITERATIVE MODEL INTO DB HERE
-                    for client in clients:
-                        model = client.last_updated_model
-                        if model is not None:
-                            mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                        for client in clients:
+                            model = client.last_updated_model
+                            if model is not None:
+                                mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                 if self.logger.isEnabledFor(logging.DEBUG):
                     norm = FLModelParamUtils.debug_model_norm(
                         self.global_model().fl_get_module()
