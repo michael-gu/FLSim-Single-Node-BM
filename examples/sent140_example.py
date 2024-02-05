@@ -261,10 +261,10 @@ def main_worker(
     # save stats to benchmarkdb
     if store_intermediate_models:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, flsim.database_helper.get_db_size('model_databases/flsim_single_node_models.db'))
-        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'sent_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_table_size('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'models'))
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'test', 'benchmarks', 'sent_yes_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, get_table_size('localhost', 'michgu', 'test', 'benchmarks', 'models'))
     else:
         # flsim.database_helper.insert_benchmark_stats('benchmark_databases/cifar10_benchmarks.db', 'benchmarks_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
-        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', 'sent_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
+        flsim.mysql_database_helper.insert_benchmark_stats('localhost', 'michgu', 'test', 'benchmarks', 'sent_no_tracking', global_num_epochs, client_num_epochs, data_provider.num_train_users(), users_per_round, store_intermediate_models, totalTime, 0)
         
 
 @hydra.main(config_path=None, config_name="sent140_config")

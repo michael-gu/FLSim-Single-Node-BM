@@ -5,7 +5,7 @@ from flsim.mysql_database_helper import get_benchmark_stats
 conn = mysql.connector.connect(
     host='localhost',
     user='michgu',
-    password='Dolphin#1',
+    password='test',
     database='benchmarks'
 )
 
@@ -25,7 +25,7 @@ for table in tables:
     csv_path = f"../benchmark_stats/{table_name}.csv"
     
     # Call get_benchmark_stats for each table
-    get_benchmark_stats('localhost', 'michgu', 'Dolphin#1', 'benchmarks', table_name, csv_path)
+    get_benchmark_stats('localhost', 'michgu', 'test', 'benchmarks', table_name, csv_path)
 
 # Close the connection
 conn.close()
