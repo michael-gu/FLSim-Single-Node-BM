@@ -283,7 +283,6 @@ class SyncTrainer(FLTrainer):
 
                 if store_intermediate_models:
                     # INSERT ITERATIVE MODEL INTO DB HERE
-                    print("storing intermediate models")
                     for client in clients:
                         model = client.last_updated_model
                         if model is not None:
