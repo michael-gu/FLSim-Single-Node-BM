@@ -257,6 +257,7 @@ def main_worker(
         ),
         num_total_users=data_provider.num_train_users(),
         distributed_world_size=distributed_world_size,
+        store_intermediate_models=store_intermediate_models,
     )
     
     endTime = datetime.now()
