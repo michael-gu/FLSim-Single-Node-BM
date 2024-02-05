@@ -207,7 +207,7 @@ def main_worker(
     device = torch.device(f"cuda:{0}" if cuda_enabled else "cpu")
     # pyre-fixme[6]: Expected `Optional[str]` for 2nd param but got `device`.
     
-        # Create the parser
+    # Create the parser
     parser = argparse.ArgumentParser()
 
     # Add an argument for the config file
