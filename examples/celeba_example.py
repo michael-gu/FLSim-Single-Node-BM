@@ -63,7 +63,7 @@ class CelebaDataset(Dataset):
 
         user_ids = self.dataset["users"]
         # num_users = num_users if num_users is not None else len(user_ids)
-        num_users = 500
+        num_users = 100
         user_ids = random.sample(user_ids, min(len(user_ids), num_users))
 
         self.transform = transform
