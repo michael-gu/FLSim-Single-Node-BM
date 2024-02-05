@@ -16,7 +16,7 @@ try:
     if os.system("git clone https://github.com/TalwalkarLab/leaf.git") != 0:
         print("3")
         sys.exit(1)
-    os.chdir("leaf/data/celeba || exit")
+    os.chdir("leaf/data/celeba")
     if os.system("mkdir data") != 0:
         print("5")
         sys.exit(1)
