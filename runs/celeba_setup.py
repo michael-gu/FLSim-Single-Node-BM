@@ -9,9 +9,9 @@ try:
     if os.system("export PATH=$PATH:/usr/local/bin") != 0:
         print("1")
         sys.exit(1)
-    if os.system("source ~/.bashrc") != 0:
-        print("2")
-        sys.exit(1)
+    # if os.system("source ~/.bashrc") != 0:
+    #     print("2")
+    #     sys.exit(1)
     os.chdir('examples')
     if os.system("git clone https://github.com/TalwalkarLab/leaf.git") != 0:
         print("3")
@@ -44,7 +44,7 @@ try:
         print("unzip")
         sys.exit(1)
     if os.system("./preprocess.sh --sf 1.0 -k 0 -iu 1 -s niid -t 'user' --tf 0.90 --spltseed 1") != 0:
-        print("preprocess")
+        
         sys.exit(1)
 except KeyboardInterrupt:
     print("Interrupted by user, exiting.")
