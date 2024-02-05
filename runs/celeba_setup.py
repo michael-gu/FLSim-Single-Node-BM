@@ -22,15 +22,11 @@ try:
     if os.system("mkdir data") != 0:
         print("5")
         sys.exit(1)
-    if os.system("cd data") != 0:
-        print("6")
-        sys.exit(1)
+    os.chdir('data')
     if os.system("mkdir raw") != 0:
         print("7")
         sys.exit(1)
-    if os.system("cd raw") != 0:
-        print("8")
-        sys.exit(1)
+    os.chdir('raw')
     if os.system("gdown --id 1ddExVxD2eVXxBjLWiAMzuknSdsPk-kIC -O identity_CelebA.txt") != 0:
         print("gfile 1")
         sys.exit(1)
