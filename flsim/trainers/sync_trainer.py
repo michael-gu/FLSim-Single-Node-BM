@@ -282,7 +282,7 @@ class SyncTrainer(FLTrainer):
                 )
 
                 if store_intermediate_models:
-                    for _ in range(5):
+                    for _ in range(3):
                     # INSERT ITERATIVE MODEL INTO DB HERE
                         for client in clients:
                             model = client.last_updated_model
