@@ -131,7 +131,8 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     final_model, eval_score = trainer.train(
         data_provider=data_provider,
         metrics_reporter=metrics_reporter,
-        num_total_users=data_provider.num_train_users(),
+        #num_total_users=data_provider.num_train_users(),
+        num_total_users=50,
         distributed_world_size=1,
         store_intermediate_models=store_intermediate_models,
     )
