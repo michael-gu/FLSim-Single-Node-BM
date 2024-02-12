@@ -84,6 +84,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
     model = Resnet18(num_classes=10)
+    model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
     # model = SimpleConvNet(in_channels=3, num_classes=10)
 
 
