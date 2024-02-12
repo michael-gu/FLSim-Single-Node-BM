@@ -241,87 +241,87 @@ class SyncTrainer(FLTrainer):
                 unit="round",
                 position=0,
             ):
-                #### Initial setup ####
-                # Initialize point of time for logging
-                timeline = Timeline(
-                    epoch=epoch,
-                    round=round,
-                    rounds_per_epoch=num_rounds_in_epoch,
-                    total_epochs=self.cfg.epochs,
-                )
+                for _ in range(3):
+                    #### Initial setup ####
+                    # Initialize point of time for logging
+                    timeline = Timeline(
+                        epoch=epoch,
+                        round=round,
+                        rounds_per_epoch=num_rounds_in_epoch,
+                        total_epochs=self.cfg.epochs,
+                    )
 
-                # Select clients for training this round
-                t = time()
-                clients = self._client_selection(
-                    num_users=num_users_on_worker,
-                    users_per_round=users_per_round_on_worker,
-                    data_provider=data_provider,
-                    timeline=timeline,
-                )
-                self.logger.info(f"Client Selection took: {time() - t} s.")
+                    # Select clients for training this round
+                    t = time()
+                    clients = self._client_selection(
+                        num_users=num_users_on_worker,
+                        users_per_round=users_per_round_on_worker,
+                        data_provider=data_provider,
+                        timeline=timeline,
+                    )
+                    self.logger.info(f"Client Selection took: {time() - t} s.")
 
-                # Select clients for calculating post-aggregation *training* metrics
-                agg_metric_clients = self._choose_clients_for_post_aggregation_metrics(
-                    train_clients=clients,
-                    num_total_users=num_users_on_worker,
-                    users_per_round=users_per_round_on_worker,
-                )
+                    # Select clients for calculating post-aggregation *training* metrics
+                    agg_metric_clients = self._choose_clients_for_post_aggregation_metrics(
+                        train_clients=clients,
+                        num_total_users=num_users_on_worker,
+                        users_per_round=users_per_round_on_worker,
+                    )
 
-                #### Training phase ####
-                # Training on selected clients for this round; also calculate training
-                # metrics on `agg_metric_clients`
-                self.logger.info(f"# clients/round on worker {rank}: {len(clients)}.")
-                self._train_one_round(
-                    timeline=timeline,
-                    clients=clients,
-                    agg_metric_clients=agg_metric_clients,
-                    users_per_round=users_per_round,
-                    metrics_reporter=metrics_reporter
-                    if self.cfg.report_train_metrics
-                    else None,
-                )
+                    #### Training phase ####
+                    # Training on selected clients for this round; also calculate training
+                    # metrics on `agg_metric_clients`
+                    self.logger.info(f"# clients/round on worker {rank}: {len(clients)}.")
+                    self._train_one_round(
+                        timeline=timeline,
+                        clients=clients,
+                        agg_metric_clients=agg_metric_clients,
+                        users_per_round=users_per_round,
+                        metrics_reporter=metrics_reporter
+                        if self.cfg.report_train_metrics
+                        else None,
+                    )
 
-                if store_intermediate_models:
-                    for _ in range(3):
-                    # INSERT ITERATIVE MODEL INTO DB HERE
+                    if store_intermediate_models:
+                        # INSERT ITERATIVE MODEL INTO DB HERE
                         for client in clients:
                             model = client.last_updated_model
                             if model is not None:
                                 mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
-                if self.logger.isEnabledFor(logging.DEBUG):
-                    norm = FLModelParamUtils.debug_model_norm(
-                        self.global_model().fl_get_module()
-                    )
-                    self.logger.debug(
-                        self.cuda_enabled and distributed_world_size > 1,
-                        f"from worker {rank}: model norm: {norm} @ "
-                        f"epoch:{epoch}, round:{round}",
-                    )
-
-                #### Evaluation phase ####
-                if rank == 0:
-                    # Report training time
-                    if (
-                        self._timeout_simulator.sample_mean_per_user != 0
-                        or self._timeout_simulator.sample_var_per_user != 0
-                    ):
-                        self.logger.info(
-                            f"mean training time/user: "
-                            f"{self._timeout_simulator.sample_mean_per_user}",
-                            f"variance of training time/user: "
-                            f"{self._timeout_simulator.sample_var_per_user}",
+                    if self.logger.isEnabledFor(logging.DEBUG):
+                        norm = FLModelParamUtils.debug_model_norm(
+                            self.global_model().fl_get_module()
+                        )
+                        self.logger.debug(
+                            self.cuda_enabled and distributed_world_size > 1,
+                            f"from worker {rank}: model norm: {norm} @ "
+                            f"epoch:{epoch}, round:{round}",
                         )
 
-                    # Report evaluation metric on evaluation clients
-                    t = time()
-                    (best_metric, best_model_state,) = self._maybe_run_evaluation(
-                        timeline=timeline,
-                        data_provider=data_provider,
-                        metrics_reporter=metrics_reporter,
-                        best_metric=best_metric,
-                        best_model_state=best_model_state,
-                    )
-                    self.logger.info(f"Evaluation took {time() - t} s.")
+                    #### Evaluation phase ####
+                    if rank == 0:
+                        # Report training time
+                        if (
+                            self._timeout_simulator.sample_mean_per_user != 0
+                            or self._timeout_simulator.sample_var_per_user != 0
+                        ):
+                            self.logger.info(
+                                f"mean training time/user: "
+                                f"{self._timeout_simulator.sample_mean_per_user}",
+                                f"variance of training time/user: "
+                                f"{self._timeout_simulator.sample_var_per_user}",
+                            )
+
+                        # Report evaluation metric on evaluation clients
+                        t = time()
+                        (best_metric, best_model_state,) = self._maybe_run_evaluation(
+                            timeline=timeline,
+                            data_provider=data_provider,
+                            metrics_reporter=metrics_reporter,
+                            best_metric=best_metric,
+                            best_model_state=best_model_state,
+                        )
+                        self.logger.info(f"Evaluation took {time() - t} s.")
 
                 if self.stop_fl_training(
                     epoch=epoch, round=round, num_rounds_in_epoch=num_rounds_in_epoch
