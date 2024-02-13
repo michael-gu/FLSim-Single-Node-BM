@@ -290,15 +290,15 @@ class SyncTrainer(FLTrainer):
                         for client in clients:
                             model = client.last_updated_model
                             if model is not None:
-                                # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
-                                buffer = io.BytesIO()
-                                torch.save(model.fl_get_module().state_dict(), buffer)
-                                buffer.seek(0)
-                                data = buffer.read()
+                                thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 
-                                model_hash = hashlib.sha256(data).hexdigest()
+                                # buffer = io.BytesIO()
+                                # torch.save(model.fl_get_module().state_dict(), buffer)
+                                # buffer.seek(0)
+                                # data = buffer.read()
+                                # model_hash = hashlib.sha256(data).hexdigest()
+                                # thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
                                 
-                                thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
                                 thread.start()
                                 # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):
