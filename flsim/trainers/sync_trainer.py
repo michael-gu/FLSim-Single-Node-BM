@@ -290,8 +290,10 @@ class SyncTrainer(FLTrainer):
                         for client in clients:
                             model = client.last_updated_model
                             if model is not None:
+                                # multithreading
                                 # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 
+                                # multithreading with crypto
                                 # buffer = io.BytesIO()
                                 # torch.save(model.fl_get_module().state_dict(), buffer)
                                 # buffer.seek(0)
@@ -301,8 +303,16 @@ class SyncTrainer(FLTrainer):
                                 
                                 # thread.start()
 
+                                # crypto
+                                buffer = io.BytesIO()
+                                torch.save(model.fl_get_module().state_dict(), buffer)
+                                buffer.seek(0)
+                                data = buffer.read()
+                                model_hash = hashlib.sha256(data).hexdigest()
+                                mysql_database_helper.insert_model_crypto('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round)
 
-                                mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                                # vanilla
+                                #mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):
                         norm = FLModelParamUtils.debug_model_norm(
                             self.global_model().fl_get_module()
