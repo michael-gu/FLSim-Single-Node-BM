@@ -53,8 +53,6 @@ def insert_model_crypto(db_host, db_user, db_password, db_name, table, model_has
     '''.format(table))
     connection.commit()
 
-    model = pickle.dumps(model_state_dict)
-
     cursor.execute('''
         INSERT INTO `{}`(model_hash, client_id, global_epoch_num, global_round_num)
         VALUES(%s, %s, %s, %s)
