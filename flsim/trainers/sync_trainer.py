@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 from datetime import datetime
+import threading
 
 import logging
 import math
@@ -287,7 +288,9 @@ class SyncTrainer(FLTrainer):
                         for client in clients:
                             model = client.last_updated_model
                             if model is not None:
-                                mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                                thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread.start()
+                                # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):
                         norm = FLModelParamUtils.debug_model_norm(
                             self.global_model().fl_get_module()
