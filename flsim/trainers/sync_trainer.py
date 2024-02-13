@@ -7,7 +7,9 @@
 
 from __future__ import annotations
 from datetime import datetime
+import io
 import threading
+import hashlib
 
 import logging
 import math
@@ -288,7 +290,8 @@ class SyncTrainer(FLTrainer):
                         for client in clients:
                             model = client.last_updated_model
                             if model is not None:
-                                thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', hashlib.sha256(torch.save(model.fl_get_module().state_dict(), io.BytesIO())).hexdigest(), str(client._name), epoch, round))
                                 thread.start()
                                 # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):

@@ -33,6 +33,36 @@ def insert_model(db_host, db_user, db_password, db_name, table, model_state_dict
     connection.commit()
     connection.close()
 
+def insert_model_crypto(db_host, db_user, db_password, db_name, table, model_hash, client_id, global_epoch_num, global_round_num):
+    connection = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name
+    )
+    cursor = connection.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS `{}` (
+            itr_id INT AUTO_INCREMENT PRIMARY KEY,
+            model_hash TEXT,
+            client_id TEXT,
+            global_epoch_num INTEGER,
+            global_round_num INTEGER
+        )       
+    '''.format(table))
+    connection.commit()
+
+    model = pickle.dumps(model_state_dict)
+
+    cursor.execute('''
+        INSERT INTO `{}`(model_hash, client_id, global_epoch_num, global_round_num)
+        VALUES(%s, %s, %s, %s)
+    '''.format(table), (model_hash, client_id, global_epoch_num, global_round_num))
+        
+    connection.commit()
+    connection.close()
+
 def insert_completed_model(db_host, db_user, db_password, db_name, table, model_state_dict, timestamp):
     connection = mysql.connector.connect(
         host=db_host,
