@@ -382,7 +382,7 @@ class SyncTrainer(FLTrainer):
             
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
-            
+            print(str(len(values)))
             print("values size: " + str(sys.getsizeof(json_values)))
 
             mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', json_keys, json_values, encryption_time)
