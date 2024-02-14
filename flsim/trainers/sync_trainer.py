@@ -365,7 +365,12 @@ class SyncTrainer(FLTrainer):
             encrypted_model = {name: param.serialize() for name, param in encrypt.items()}
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, private_context, encryption_time)
+            
+            # Convert encrypted_model and private_context to blob objects
+            encrypted_model_blob = pickle.dumps(encrypted_model)
+            private_context_blob = pickle.dumps(private_context)
+            
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model_blob, private_context_blob, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
