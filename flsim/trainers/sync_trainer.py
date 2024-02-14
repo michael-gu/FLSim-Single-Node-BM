@@ -379,7 +379,8 @@ class SyncTrainer(FLTrainer):
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             compressed_model = gzip.compress(model_dump)
-            print("SIZE OF MODEL ENCRYPTED: " + str(sys.getsizeof(compressed_model)))
+             print("SIZE OF ENCRYPTED MODEL: " + str(sys.getsizeof(encrypted_state_dict)))
+            print("SIZE OF MODEL ENCRYPTED/COMPRESSED: " + str(sys.getsizeof(compressed_model)))
             
             mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', compressed_model, encryption_time)
             
