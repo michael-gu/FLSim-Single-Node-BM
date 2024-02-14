@@ -1,4 +1,5 @@
 import csv
+import json
 import pickle
 import os
 import mysql.connector
@@ -73,17 +74,17 @@ def insert_model_encrypted(db_host, db_user, db_password, db_name, table, encryp
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS `{}` (
             itr_id INT AUTO_INCREMENT PRIMARY KEY,
-            encrypted_model LONGBLOB,
+            encrypted_model LONGTEXT,
             private_context BLOB,
             encryption_time REAL
         )       
     '''.format(table))
     connection.commit()
-
+    encrypted_model_str = json.dumps(encrypted_model)
     cursor.execute('''
         INSERT INTO `{}`(encrypted_model, private_context, encryption_time)
         VALUES(%s, %s, %s)
-    '''.format(table), (encrypted_model, private_context, encryption_time))
+    '''.format(table), (encrypted_model_str, private_context, encryption_time))
         
     connection.commit()
     connection.close()
