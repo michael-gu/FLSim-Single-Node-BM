@@ -291,7 +291,7 @@ class SyncTrainer(FLTrainer):
                             model = client.last_updated_model
                             if model is not None:
                                 # multithreading
-                                # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 
                                 # multithreading with crypto
                                 # buffer = io.BytesIO()
@@ -301,7 +301,7 @@ class SyncTrainer(FLTrainer):
                                 # model_hash = hashlib.sha256(data).hexdigest()
                                 # thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
                                 
-                                # thread.start()
+                                thread.start()
 
                                 # crypto
                                 # buffer = io.BytesIO()
@@ -312,7 +312,7 @@ class SyncTrainer(FLTrainer):
                                 # mysql_database_helper.insert_model_crypto('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round)
 
                                 # vanilla
-                                mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                                # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):
                         norm = FLModelParamUtils.debug_model_norm(
                             self.global_model().fl_get_module()
