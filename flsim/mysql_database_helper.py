@@ -82,7 +82,7 @@ def insert_model_encrypted(db_host, db_user, db_password, db_name, table, encryp
 
     cursor.execute('''
         INSERT INTO `{}`(encrypted_model, encryption_time)
-        VALUES(%s, %s, %s)
+        VALUES(%s, %s)
     '''.format(table), (encrypted_model, encryption_time))
         
     connection.commit()
