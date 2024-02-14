@@ -362,11 +362,12 @@ class SyncTrainer(FLTrainer):
             scale = 2**40
             private_context = context.serialize()
             encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
+            encrypted_model_2 = {key: value.serialize() for key, value in encrypted_model.items()}
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
             # Convert encrypted_model and private_context to blob objects
-            encrypted_model_blob = encrypted_model.serialize()
+            encrypted_model_blob = pickle.dumps(encrypted_model_2)
             private_context_blob = pickle.dumps(private_context)
             
             mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model_blob, private_context_blob, encryption_time)
