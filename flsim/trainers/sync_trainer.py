@@ -371,7 +371,11 @@ class SyncTrainer(FLTrainer):
                 # Flatten the tensor and convert it to a list
                 flat_list = value.flatten().tolist()
                 # Encrypt the list
-                encrypted_state_dict[key] = ts.ckks_vector(context, flat_list)
+                encrypted_vector = ts.ckks_vector(context, flat_list)
+                # Serialize the encrypted vector to bytes
+                serialized_vector = encrypted_vector.serialize()
+                # Store the serialized vector in the dictionary
+                encrypted_state_dict[key] = serialized_vector
 
             json_str = json.dumps(encrypted_state_dict)
 
