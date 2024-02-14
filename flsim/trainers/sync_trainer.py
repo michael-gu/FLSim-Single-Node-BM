@@ -10,7 +10,7 @@ from datetime import datetime
 import io
 import threading
 import hashlib
-# import tenseal as ts
+import tenseal as ts
 
 import logging
 import math
@@ -292,15 +292,15 @@ class SyncTrainer(FLTrainer):
                             model = client.last_updated_model
                             if model is not None:
                                 # multithreading
-                                thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 
                                 # multithreading with crypto
-                                # buffer = io.BytesIO()
-                                # torch.save(model.fl_get_module().state_dict(), buffer)
-                                # buffer.seek(0)
-                                # data = buffer.read()
-                                # model_hash = hashlib.sha256(data).hexdigest()
-                                # thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
+                                buffer = io.BytesIO()
+                                torch.save(model.fl_get_module().state_dict(), buffer)
+                                buffer.seek(0)
+                                data = buffer.read()
+                                model_hash = hashlib.sha256(data).hexdigest()
+                                thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
                                 
                                 thread.start()
 
@@ -354,15 +354,13 @@ class SyncTrainer(FLTrainer):
                 ):
                     break
 
-            # encrypt global model
-            # model = self.global_model().fl_get_module().state_dict()
-            # # model_params = [param.cpu().numpy() for param in model.values()]
-            # context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
-            # scale = 2**40
-            # #encrypted_model = [ts.ckks_vector(context, param.flatten(), scale=scale) for param in model_params]
-            # encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
-            # # insert encrypted global model
-            # mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model)
+            # encrypt global model and insert
+            model = self.global_model().fl_get_module().state_dict()
+            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+            scale = 2**40
+            private_key = context.secret_key().serialize()
+            encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, private_key)
             
             # calculate amount of time encryption and insertion took
             
