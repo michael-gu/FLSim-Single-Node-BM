@@ -8,6 +8,7 @@
 from __future__ import annotations
 from datetime import datetime
 import io
+import json
 import threading
 import hashlib
 import tenseal as ts
@@ -42,7 +43,6 @@ from flsim.utils.fl.stats import RandomVariableStatsTracker
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
 from tqdm import tqdm
-import sqlite3
 import pickle
 
 class SyncTrainer(FLTrainer):
@@ -358,19 +358,27 @@ class SyncTrainer(FLTrainer):
             # encrypt global model and insert
             startEncrypt = datetime.now()
             model = self.global_model().fl_get_module().state_dict()
-            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[55, 35, 35, 55])
-            scale = 2**40
-            private_context = context.serialize()
-            encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
-            encrypted_model_2 = {key: value.serialize() for key, value in encrypted_model.items()}
+            context = ts.context(
+                        ts.SCHEME_TYPE.CKKS,
+                        poly_modulus_degree=8192,
+                        coeff_mod_bit_sizes=[60, 40, 40, 60]
+                    )
+            context.generate_galois_keys()
+            context.global_scale = 2**40
+
+            encrypted_state_dict = {}
+            for key, value in model.items():
+                # Flatten the tensor and convert it to a list
+                flat_list = value.flatten().tolist()
+                # Encrypt the list
+                encrypted_state_dict[key] = ts.ckks_vector(context, flat_list)
+
+            json_str = json.dumps(encrypted_state_dict)
+
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
-            # Convert encrypted_model and private_context to blob objects
-            encrypted_model_blob = pickle.dumps(encrypted_model_2)
-            private_context_blob = pickle.dumps(private_context)
-            
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model_blob, private_context_blob, encryption_time)
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', json_str, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
