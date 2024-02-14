@@ -377,8 +377,6 @@ class SyncTrainer(FLTrainer):
                 # Store the serialized vector in the dictionary
                 encrypted_state_dict[key] = serialized_vector
 
-            json_str = json.dumps(encrypted_state_dict)
-
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
