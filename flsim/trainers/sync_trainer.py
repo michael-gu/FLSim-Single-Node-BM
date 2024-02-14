@@ -361,7 +361,8 @@ class SyncTrainer(FLTrainer):
             context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=16384, coeff_mod_bit_sizes=[60, 40, 40, 60])
             scale = 2**40
             private_context = context.serialize()
-            encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
+            encrypt = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
+            encrypted_model = {name: param.serialize() for name, param in encrypt.items()}
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, private_context, encryption_time)
