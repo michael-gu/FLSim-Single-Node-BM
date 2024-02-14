@@ -377,7 +377,7 @@ class SyncTrainer(FLTrainer):
                 values.append(serialized_vector)
                 
             json_keys = json.dumps(keys)
-            json_values = pickle.dumps(values)
+            json_values = pickle.dumps(values, protocol=pickle.HIGHEST_PROTOCOL)
 
             
             endEncrypt = datetime.now()
