@@ -10,6 +10,7 @@ from datetime import datetime
 import gzip
 import io
 import json
+import sys
 import threading
 import hashlib
 import tenseal as ts
@@ -378,6 +379,7 @@ class SyncTrainer(FLTrainer):
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             compressed_model = gzip.compress(model_dump)
+            print(sys.getsizeof(compressed_model))
             
             mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', compressed_model, encryption_time)
             
