@@ -295,22 +295,22 @@ class SyncTrainer(FLTrainer):
                                 # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 
                                 # multithreading with crypto
-                                # buffer = io.BytesIO()
-                                # torch.save(model.fl_get_module().state_dict(), buffer)
-                                # buffer.seek(0)
-                                # data = buffer.read()
-                                # model_hash = hashlib.sha256(data).hexdigest()
-                                # thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
-                                
-                                # thread.start()
-
-                                # crypto
                                 buffer = io.BytesIO()
                                 torch.save(model.fl_get_module().state_dict(), buffer)
                                 buffer.seek(0)
                                 data = buffer.read()
                                 model_hash = hashlib.sha256(data).hexdigest()
-                                mysql_database_helper.insert_model_crypto('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round)
+                                thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
+                                
+                                thread.start()
+
+                                # crypto
+                                # buffer = io.BytesIO()
+                                # torch.save(model.fl_get_module().state_dict(), buffer)
+                                # buffer.seek(0)
+                                # data = buffer.read()
+                                # model_hash = hashlib.sha256(data).hexdigest()
+                                # mysql_database_helper.insert_model_crypto('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round)
 
                                 # vanilla
                                 # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
