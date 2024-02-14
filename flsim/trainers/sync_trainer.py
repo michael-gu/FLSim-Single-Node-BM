@@ -196,6 +196,7 @@ class SyncTrainer(FLTrainer):
         # database_helper.delete_table('model_databases/flsim_single_node_models.db', 'cifar10_models')
         print("Clearing model database")
         mysql_database_helper.delete_table('localhost', 'michgu', 'test', 'benchmarks', 'models')
+        mysql_database_helper.delete_table('localhost', 'michgu', 'test', 'benchmarks', 'encrypted_models')
        
         FLDistributedUtils.setup_distributed_training(
             distributed_world_size, use_cuda=self.cuda_enabled
@@ -245,7 +246,7 @@ class SyncTrainer(FLTrainer):
                 unit="round",
                 position=0,
             ):
-                for _ in range(3):
+                for _ in range(1):
                     #### Initial setup ####
                     # Initialize point of time for logging
                     timeline = Timeline(
@@ -355,12 +356,15 @@ class SyncTrainer(FLTrainer):
                     break
 
             # encrypt global model and insert
+            startEncrypt = datetime.now()
             model = self.global_model().fl_get_module().state_dict()
             context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
             scale = 2**40
             private_key = context.secret_key().serialize()
             encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, private_key)
+            endEncrypt = datetime.now()
+            encryption_time = (startEncrypt - endEncrypt).total_seconds()
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, private_key, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
