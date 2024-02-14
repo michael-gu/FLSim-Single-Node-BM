@@ -368,19 +368,17 @@ class SyncTrainer(FLTrainer):
 
             encrypted_state_dict = {}
             for key, value in model.items():
-                # Flatten the tensor and convert it to a list
                 flat_list = value.flatten().tolist()
-                # Encrypt the list
                 encrypted_vector = ts.ckks_vector(context, flat_list)
-                # Serialize the encrypted vector to bytes
                 serialized_vector = encrypted_vector.serialize()
-                # Store the serialized vector in the dictionary
                 encrypted_state_dict[key] = serialized_vector
 
+            model_dump = pickle.dumps(encrypted_state_dict)
+            
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_state_dict, encryption_time)
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', model_dump, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
