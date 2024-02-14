@@ -74,7 +74,7 @@ def insert_model_encrypted(db_host, db_user, db_password, db_name, table, encryp
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS `{}` (
             itr_id INT AUTO_INCREMENT PRIMARY KEY,
-            encrypted_model BLOB,
+            encrypted_model LONGBLOB,
             encryption_time REAL
         )       
     '''.format(table))

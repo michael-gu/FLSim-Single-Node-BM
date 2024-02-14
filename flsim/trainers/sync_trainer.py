@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 from datetime import datetime
+import gzip
 import io
 import json
 import threading
@@ -376,8 +377,9 @@ class SyncTrainer(FLTrainer):
             
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
+            compressed_model = gzip.compress(model_dump)
             
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', model_dump, encryption_time)
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', compressed_model, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
