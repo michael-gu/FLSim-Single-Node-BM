@@ -10,6 +10,7 @@ from datetime import datetime
 import io
 import threading
 import hashlib
+import tenseal as ts
 
 import logging
 import math
@@ -354,8 +355,14 @@ class SyncTrainer(FLTrainer):
                     break
 
             # encrypt global model
-            
-            # insert encrypted global model
+            # model = self.global_model().fl_get_module().state_dict()
+            # # model_params = [param.cpu().numpy() for param in model.values()]
+            # context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+            # scale = 2**40
+            # #encrypted_model = [ts.ckks_vector(context, param.flatten(), scale=scale) for param in model_params]
+            # encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
+            # # insert encrypted global model
+            # mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model)
             
             # calculate amount of time encryption and insertion took
             

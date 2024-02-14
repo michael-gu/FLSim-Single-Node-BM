@@ -61,6 +61,31 @@ def insert_model_crypto(db_host, db_user, db_password, db_name, table, model_has
     connection.commit()
     connection.close()
 
+def insert_model_encrypted(db_host, db_user, db_password, db_name, table, encrypted_model):
+    connection = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name
+    )
+    cursor = connection.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS `{}` (
+            itr_id INT AUTO_INCREMENT PRIMARY KEY,
+            encrypted_model LONGBLOB,
+        )       
+    '''.format(table))
+    connection.commit()
+
+    cursor.execute('''
+        INSERT INTO `{}`(encrypted_model)
+        VALUES(%s, %s, %s, %s)
+    '''.format(table), (encrypted_model))
+        
+    connection.commit()
+    connection.close()
+
 def insert_completed_model(db_host, db_user, db_password, db_name, table, model_state_dict, timestamp):
     connection = mysql.connector.connect(
         host=db_host,
