@@ -380,7 +380,7 @@ class SyncTrainer(FLTrainer):
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', json_str, encryption_time)
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_state_dict, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
