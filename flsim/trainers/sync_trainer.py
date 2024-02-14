@@ -360,7 +360,7 @@ class SyncTrainer(FLTrainer):
             model = self.global_model().fl_get_module().state_dict()
             context = ts.context(
                         ts.SCHEME_TYPE.CKKS,
-                        poly_modulus_degree=8192,
+                        poly_modulus_degree=4096,
                         coeff_mod_bit_sizes=[60, 40, 40, 60]
                     )
             context.generate_galois_keys()
