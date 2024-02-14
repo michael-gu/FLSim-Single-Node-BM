@@ -358,11 +358,10 @@ class SyncTrainer(FLTrainer):
             # encrypt global model and insert
             startEncrypt = datetime.now()
             model = self.global_model().fl_get_module().state_dict()
-            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=4096, coeff_mod_bit_sizes=[60, 40, 40, 60])
             scale = 2**40
             private_context = context.serialize()
-            encrypt = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
-            encrypted_model = {name: param.serialize() for name, param in encrypt.items()}
+            encrypted_model = {name: ts.ckks_vector(context, param.cpu().numpy().flatten(), scale=scale) for name, param in model.items()}
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
             
