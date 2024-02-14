@@ -313,7 +313,7 @@ class SyncTrainer(FLTrainer):
                                 # mysql_database_helper.insert_model_crypto('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round)
 
                                 # vanilla
-                                mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
+                                # mysql_database_helper.insert_model('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round)
                     if self.logger.isEnabledFor(logging.DEBUG):
                         norm = FLModelParamUtils.debug_model_norm(
                             self.global_model().fl_get_module()
