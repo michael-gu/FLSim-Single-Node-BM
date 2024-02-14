@@ -367,23 +367,25 @@ class SyncTrainer(FLTrainer):
                     )
             context.global_scale = 2**40
 
-            encrypted_state_dict = {}
+            keys = []
+            values = []
             for key, value in model.items():
                 flat_list = value.flatten().tolist()
                 encrypted_vector = ts.ckks_vector(context, flat_list)
                 serialized_vector = encrypted_vector.serialize()
-                encrypted_state_dict[key] = serialized_vector
+                keys.append(key)
+                values.append(serialized_vector)
+                
+            json_keys = json.dumps(keys)
+            json_values = json.dumps(values)
 
-            model_dump = pickle.dumps(encrypted_state_dict)
             
             endEncrypt = datetime.now()
             encryption_time = (startEncrypt - endEncrypt).total_seconds()
-            compressed_model = gzip.compress(model_dump)
-            print("SIZE OF ENCRYPTED MODEL: " + str(sys.getsizeof(encrypted_state_dict)))
-            print("SIZE OF ENCRYPTED DUMPED MODEL: " + str(sys.getsizeof(model_dump)))
-            print("SIZE OF MODEL ENCRYPTED/COMPRESSED: " + str(sys.getsizeof(compressed_model)))
             
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', compressed_model, encryption_time)
+            print("values size: " + str(sys.getsizeof(json_values)))
+
+            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', json_keys, json_values, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
