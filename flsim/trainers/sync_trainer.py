@@ -296,7 +296,8 @@ class SyncTrainer(FLTrainer):
                             model = client.last_updated_model
                             if model is not None:
                                 # multithreading
-                                thread1 = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test', 'benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread1 = threading.Thread(target=mysql_database_helper.insert_model, 
+                                    args=('localhost', 'michgu', 'test', 'benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
                                 thread1.start()
                                 
                                 # multithreading with crypto
@@ -305,8 +306,8 @@ class SyncTrainer(FLTrainer):
                                 buffer.seek(0)
                                 data = buffer.read()
                                 model_hash = hashlib.sha256(data).hexdigest()
-                                thread2 = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test', 'benchmarks', 'hashed_models', model_hash, str(client._name), epoch, round))
-                                
+                                thread2 = threading.Thread(target=mysql_database_helper.insert_model_crypto, 
+                                    args=('localhost', 'michgu', 'test', 'benchmarks', 'hashes', model_hash, str(client._name), epoch, round))
                                 thread2.start()
 
                                 # crypto
