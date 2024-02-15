@@ -248,7 +248,7 @@ class SyncTrainer(FLTrainer):
                 unit="round",
                 position=0,
             ):
-                for _ in range(1):
+                for _ in range(3):
                     #### Initial setup ####
                     # Initialize point of time for logging
                     timeline = Timeline(
@@ -295,7 +295,8 @@ class SyncTrainer(FLTrainer):
                             model = client.last_updated_model
                             if model is not None:
                                 # multithreading
-                                # thread = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread1 = threading.Thread(target=mysql_database_helper.insert_model, args=('localhost', 'michgu', 'test','benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                thread1.start()
                                 
                                 # multithreading with crypto
                                 buffer = io.BytesIO()
@@ -303,9 +304,9 @@ class SyncTrainer(FLTrainer):
                                 buffer.seek(0)
                                 data = buffer.read()
                                 model_hash = hashlib.sha256(data).hexdigest()
-                                thread = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
+                                thread2 = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
                                 
-                                thread.start()
+                                thread2.start()
 
                                 # crypto
                                 # buffer = io.BytesIO()
@@ -358,28 +359,28 @@ class SyncTrainer(FLTrainer):
                     break
 
             # encrypt global model and insert
-            startEncrypt = datetime.now()
-            model = self.global_model().fl_get_module().state_dict()
-            context = ts.context(
-                        ts.SCHEME_TYPE.CKKS,
-                        poly_modulus_degree=8192,
-                        coeff_mod_bit_sizes=[60, 40, 40, 60]
-                    )
-            context.global_scale = 2**40
+            # startEncrypt = datetime.now()
+            # model = self.global_model().fl_get_module().state_dict()
+            # context = ts.context(
+            #             ts.SCHEME_TYPE.CKKS,
+            #             poly_modulus_degree=8192,
+            #             coeff_mod_bit_sizes=[60, 40, 40, 60]
+            #         )
+            # context.global_scale = 2**40
 
-            encrypted_model = {}
-            for key, value in model.items():
-                flat_list = value.flatten().tolist()
-                encrypted_vector = ts.ckks_vector(context, flat_list)
-                serialized_vector = encrypted_vector.serialize()
-                encrypted_model[key] = serialized_vector
+            # encrypted_model = {}
+            # for key, value in model.items():
+            #     flat_list = value.flatten().tolist()
+            #     encrypted_vector = ts.ckks_vector(context, flat_list)
+            #     serialized_vector = encrypted_vector.serialize()
+            #     encrypted_model[key] = serialized_vector
             
-            endEncrypt = datetime.now()
-            encryption_time = (startEncrypt - endEncrypt).total_seconds()
+            # endEncrypt = datetime.now()
+            # encryption_time = (startEncrypt - endEncrypt).total_seconds()
 
-            print("values size: " + str(sys.getsizeof(encrypted_model)))
+            # print("values size: " + str(sys.getsizeof(encrypted_model)))
 
-            mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, encryption_time)
+            # mysql_database_helper.insert_model_encrypted('localhost', 'michgu', 'test','benchmarks', 'encrypted_models', encrypted_model, encryption_time)
             
             # calculate amount of time encryption and insertion took
             
