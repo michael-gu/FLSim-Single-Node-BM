@@ -304,7 +304,7 @@ class SyncTrainer(FLTrainer):
                                 buffer.seek(0)
                                 data = buffer.read()
                                 model_hash = hashlib.sha256(data).hexdigest()
-                                thread2 = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models', model_hash, str(client._name), epoch, round))
+                                thread2 = threading.Thread(target=mysql_database_helper.insert_model_crypto, args=('localhost', 'michgu', 'test','benchmarks', 'models_hashed', model_hash, str(client._name), epoch, round))
                                 
                                 thread2.start()
 
