@@ -86,7 +86,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
     
     config = ViTConfig(
-    image_size=224,
+    image_size=32,
     patch_size=16,
     num_channels=3,
     num_labels=10,
