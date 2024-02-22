@@ -42,7 +42,7 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from torchvision import transforms
 from torchvision.datasets.cifar import CIFAR10
-from transformers import ViTConfig, ViTForImageClassification
+import torchvision.models as models
 
 IMAGE_SIZE = 32
 
@@ -85,17 +85,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
     
-    config = ViTConfig(
-    image_size=32,
-    patch_size=16,
-    num_channels=3,
-    num_labels=10,
-    hidden_size=768,
-    num_hidden_layers=12,
-    num_attention_heads=12,
-    intermediate_size=3072,
-    )   
-    model = ViTForImageClassification(config)
+    model = models.vit_b_16(pretrained=False)
     
     # model = Resnet18(num_classes=10)
     # model = SimpleConvNet(in_channels=3, num_classes=10)

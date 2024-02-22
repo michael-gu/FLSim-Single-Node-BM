@@ -43,7 +43,6 @@ from omegaconf import DictConfig, OmegaConf
 from torchvision import transforms
 from torchvision.datasets import MNIST
 import torchvision.models as models
-from transformers import ViTConfig, ViTForImageClassification
 
 IMAGE_SIZE = 32
 
@@ -88,18 +87,7 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     #model = Resnet18(num_classes=10)
     # model = SimpleConvNet(in_channels=3, num_classes=10)
   
-    config = ViTConfig(
-        image_size=224,  # Size of the input images
-        patch_size=16,  # Size of the patches the image is divided into
-        num_channels=3,  # Number of input channels (3 for RGB images)
-        num_labels=10,  # Number of output labels
-        hidden_size=768,  # Dimensionality of the transformer encoder
-        num_hidden_layers=12,  # Number of transformer layers
-        num_attention_heads=12,  # Number of attention heads in the transformer
-        intermediate_size=3072,  # Dimensionality of the transformer intermediate layer
-    )
-    model = ViTForImageClassification(config)
-    
+    model = models.vit_b_16(pretrained=False)
 #    model = models.resnet18(pretrained=False)
  #   model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
 
