@@ -249,7 +249,7 @@ class SyncTrainer(FLTrainer):
                 unit="round",
                 position=0,
             ):
-                for _ in range(3):
+                for _ in range(1):
                     #### Initial setup ####
                     # Initialize point of time for logging
                     timeline = Timeline(
