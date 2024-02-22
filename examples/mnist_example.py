@@ -51,13 +51,21 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
 
     # defines a transform object to be applied to each image
     # resizes image, center crops, converts to pytorch tensor, and normalizes
+    # transform = transforms.Compose(
+    #     [
+    #         transforms.Resize(IMAGE_SIZE),
+    #         transforms.CenterCrop(IMAGE_SIZE),
+    #         transforms.ToTensor(),
+    #         transforms.Normalize((0.1307,), (0.3081,))
+    #     ]
+    # )
     transform = transforms.Compose(
-        [
-            transforms.Resize(IMAGE_SIZE),
-            transforms.CenterCrop(IMAGE_SIZE),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
-        ]
+    [
+        transforms.Resize(224),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ]
     )
 
     # creates dataset object using CIFAR10 class, downloads dataset and transforms each image
@@ -84,12 +92,12 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
 def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> None:
     cuda_enabled = torch.cuda.is_available() and use_cuda_if_available
     device = torch.device(f"cuda:{0j}" if cuda_enabled else "cpu")
-    #model = Resnet18(num_classes=10)
+    # model = Resnet18(num_classes=10)
     # model = SimpleConvNet(in_channels=3, num_classes=10)
   
     model = models.vit_b_16(pretrained=False)
-#    model = models.resnet18(pretrained=False)
- #   model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+    # model = models.resnet18(pretrained=False)
+    # model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
 
     # Create the parser
     parser = argparse.ArgumentParser()
