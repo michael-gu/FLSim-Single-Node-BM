@@ -51,13 +51,22 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
 
     # defines a transform object to be applied to each image
     # resizes image, center crops, converts to pytorch tensor, and normalizes
+    # transform = transforms.Compose(
+    #     [
+    #         transforms.Resize(IMAGE_SIZE),
+    #         transforms.CenterCrop(IMAGE_SIZE),
+    #         transforms.ToTensor(),
+    #         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    #     ]
+    # )
+
     transform = transforms.Compose(
-        [
-            transforms.Resize(IMAGE_SIZE),
-            transforms.CenterCrop(IMAGE_SIZE),
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        ]
+    [
+        transforms.Resize(224),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))     
+    ]
     )
 
     # creates dataset object using CIFAR10 class, downloads dataset and transforms each image

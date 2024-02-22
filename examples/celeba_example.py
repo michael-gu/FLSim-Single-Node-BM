@@ -47,6 +47,7 @@ from opacus.validators.module_validator import ModuleValidator
 from torch.utils.data import Dataset
 from torchvision import models, transforms
 from torchvision.datasets import ImageFolder
+import torchvision.models as models
 
 
 class CelebaDataset(Dataset):
@@ -106,13 +107,21 @@ class CelebaDataset(Dataset):
 
 def build_data_provider(data_config):
     IMAGE_SIZE: int = 32
+    # transform = transforms.Compose(
+    #     [
+    #         transforms.Resize(IMAGE_SIZE),
+    #         transforms.CenterCrop(IMAGE_SIZE),
+    #         transforms.ToTensor(),
+    #         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    #     ]
+    # )
     transform = transforms.Compose(
-        [
-            transforms.Resize(IMAGE_SIZE),
-            transforms.CenterCrop(IMAGE_SIZE),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        ]
+    [
+        transforms.Resize(224),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))     
+    ]
     )
     train_dataset = CelebaDataset(
         data_root="leaf/data/celeba/data/train/all_data_0_0_keep_0_train_9.json",
@@ -211,13 +220,15 @@ def main_worker(
     distributed_world_size: int = 1,
 ) -> None:
     data_provider = build_data_provider(data_config)
-    model = (
-        Resnet18(num_classes=2)
-        if model_config.use_resnet
-        else SimpleConvNet(
-            in_channels=3, num_classes=2, dropout_rate=model_config.dropout
-        )
-    )
+    # model = (
+    #     Resnet18(num_classes=2)
+    #     if model_config.use_resnet
+    #     else SimpleConvNet(
+    #         in_channels=3, num_classes=2, dropout_rate=model_config.dropout
+    #     )
+    # )
+    
+    model = models.vit_b_16(pretrained=False)
 
 
     # Create the parser
