@@ -230,7 +230,6 @@ def main_worker(
     
     model = models.vit_b_16(pretrained=False)
 
-
     # Create the parser
     parser = argparse.ArgumentParser()
 
