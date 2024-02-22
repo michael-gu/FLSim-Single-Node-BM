@@ -61,10 +61,11 @@ def build_data_provider(local_batch_size, examples_per_user, drop_last: bool = F
     # )
     transform = transforms.Compose(
     [
+        transforms.Grayscale(num_output_channels=3),
         transforms.Resize(224),
         transforms.CenterCrop(224),
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        transforms.Normalize((0.1307,), (0.3081,))     
     ]
     )
 
@@ -96,7 +97,6 @@ def main(trainer_config, data_config, use_cuda_if_available: bool = True,) -> No
     # model = SimpleConvNet(in_channels=3, num_classes=10)
   
     model = models.vit_b_16(pretrained=False)
-    model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
     # model = models.resnet18(pretrained=False)
     # model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
 
