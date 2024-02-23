@@ -296,9 +296,9 @@ class SyncTrainer(FLTrainer):
                             model = client.last_updated_model
                             if model is not None:
                                 # multithreading
-                                thread1 = threading.Thread(target=mysql_database_helper.insert_model, 
-                                     args=('localhost', 'michgu', 'test', 'benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
-                                thread1.start()
+                                # thread1 = threading.Thread(target=mysql_database_helper.insert_model, 
+                                #      args=('localhost', 'michgu', 'test', 'benchmarks', 'models', model.fl_get_module().state_dict(), str(client._name), epoch, round))
+                                # thread1.start()
                                 
                                 # multithreading with crypto
                                 buffer = io.BytesIO()
